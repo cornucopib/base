@@ -1,8 +1,8 @@
 package com.cornucopib.base;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class ComparatorTest {
@@ -13,6 +13,7 @@ public class ComparatorTest {
         item.put("status", "in progress");
         item.put("date", "2023-04-15");
         result.add(item);
+
 
         Map<String, String> item1 = new HashMap<>();
         item1.put("status", "overdue");
@@ -36,6 +37,17 @@ public class ComparatorTest {
         item5.put("status", "in progress");
         result.add(item5);
 
+
+        Map<String, String> item6 = new HashMap<>();
+        item6.put("status", "in progress");
+        item6.put("date", "abc");
+        result.add(item6);
+
+        Map<String, String> item7 = new HashMap<>();
+        item7.put("status", "in progress");
+        item7.put("date", "2024-04-15");
+        result.add(item7);
+
         for (Map<String, String> stringStringMap : result) {
             System.out.println("原始： status:" + stringStringMap.get("status") + " date:" + stringStringMap.get("date"));
         }
@@ -51,20 +63,25 @@ public class ComparatorTest {
                 .comparing((Map<String, String> task) -> {
                     String status = task.get("status");
                     // 如果status为空或只含空格，则视为最低优先级
-                    int index = status != null && !status.trim().isEmpty() ? statusPriority.indexOf(status) : -1;
+                    int index = status != null && !status.trim().isEmpty() ? statusPriority.indexOf(status) : Integer.MAX_VALUE;
                     return Integer.valueOf(index);
                 })
                 .thenComparing((Map<String, String> task) -> {
                     String dateString = task.get("date");
                     // 如果date为空，则返回null，否则解析为LocalDateTime
-                    return dateString == null || dateString.isEmpty() ? null : LocalDate.parse(dateString, formatter);
-                }, Comparator.nullsLast(Comparator.naturalOrder()));
+                    if(dateString == null || dateString.isEmpty()){
+                        return null;
+                    }
+                    try {
+                        return LocalDate.parse(dateString, formatter);
+                    }catch (DateTimeParseException e){
+                        return null;
+                    }
+                }, Comparator.nullsLast(Comparator.reverseOrder()));
 
         // 对tasks列表进行排序
         result.sort(comparator);
 
-
-        Collections.sort(result, comparator);
 
         for (Map<String, String> stringStringMap : result) {
             System.out.println("排序后： status:" + stringStringMap.get("status") + " date:" + stringStringMap.get("date"));
