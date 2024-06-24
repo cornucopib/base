@@ -72,6 +72,73 @@ import java.util.*;
 //        tasks.each { println(it) }
 //    }
 //}
+
+
+
+//import java.time.LocalDate
+//import java.time.format.DateTimeFormatter
+//
+//// 定义任务列表
+//List<Map<String, String>> tasks = [
+//        ["status": "in progress", "date": "2023-03-15"],
+//        ["status": "completed", "date": ""],
+//        ["status": "overdue", "date": "2023-03-14"],
+//        ["status": "in progress", "date": "abc"],
+//        ["status": "in progress", "date": "2023-04-15"],
+//        ["status": null, "date": "2023-03-15abc"],
+//        ["status": "", "date": "2023-03-15abc"],
+//        ["status": "in progress", "date": ""]
+//        ]
+//
+//// 定义日期格式化器
+//def formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+//
+//// 定义状态优先级列表
+//def statusPriority = ['in progress', 'completed', 'overdue']
+//
+//// 辅助函数：安全解析日期
+//def parseDate = { String dateStr ->
+//    try {
+//            LocalDate.parse(dateStr.trim(), formatter)
+//        } catch (Exception e) {
+//        null // 返回null表示无法解析
+//        }
+//        }
+//
+//// 排序逻辑
+//        tasks.sort { Map<String, String> a, Map<String, String> b ->
+//        // 计算状态索引，空或空白状态视为最低优先级
+//        def statusAIdx = a.status?.trim()?.empty ? Integer.MAX_VALUE : statusPriority.indexOf(a.status)
+//    def statusBIdx = b.status?.trim()?.empty ? Integer.MAX_VALUE : statusPriority.indexOf(b.status)
+//
+//    // 首先基于状态进行排序
+//    if (statusAIdx != statusBIdx) {
+//        return statusAIdx <=> statusBIdx
+//    }
+//
+//    // 然后基于日期进行排序
+//    def dateA = parseDate(a.date)
+//    def dateB = parseDate(b.date)
+//
+//    // 如果两个日期都可解析，按倒序比较
+//    if (dateA != null && dateB != null) {
+//        return dateB <=> dateA
+//    }
+//
+//    // 如果一个可解析，另一个不可解析，可解析的排在前面
+//    if (dateA != null) {
+//        return -1
+//    }
+//    if (dateB != null) {
+//        return 1
+//    }
+//
+//    // 如果两个日期都不可解析，视为相等
+//    0
+//}
+//
+//// 打印排序后的结果
+//tasks.each { println(it) }
 public class ComparatorTest {
 
     public static void main(String[] args) {
